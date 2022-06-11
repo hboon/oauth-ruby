@@ -191,7 +191,7 @@ module OAuth
         _uri = URI.parse(path)
         path = "#{_uri.path}#{_uri.query ? "?#{_uri.query}" : ""}"
       end
-      p "xxx oauth-ruby request 2"
+      p "xxx oauth-ruby request 2 http_method: #{http_method} path: #{path} token: #{token} request_options: #{request_options.to_hash} arguments: #{arguments.map {|e|e.to_hash}}"
 
       # override the request with your own, this is useful for file uploads which Net::HTTP does not do
       req = create_signed_request(http_method, path, token, request_options, *arguments)
@@ -219,6 +219,7 @@ module OAuth
 
         raise OAuth::Problem.new(params.delete("oauth_problem"), rsp, params)
       end
+      #hhh this is the one that is wrong `rsp`
       p "xxx oauth-ruby request 7: #{rsp}"
 
       rsp
