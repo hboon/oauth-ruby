@@ -231,7 +231,7 @@ module OAuth
       request_options[:token_request] ||= true
       p "xxx oauth-ruby token_request 2 request_options[:token_request]: #{request_options[:token_request]}"
       response = request(http_method, path, token, request_options, *arguments)
-      p "xxx oauth-ruby token_request 3 response.code: #{response.code.to_i}"
+      p "xxx oauth-ruby token_request 3 response.code: #{response.code.to_i} error: #{response.error!}"
       case response.code.to_i
 
       when (200..299)
