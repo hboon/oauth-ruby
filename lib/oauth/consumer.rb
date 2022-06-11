@@ -185,22 +185,28 @@ module OAuth
     #   @consumer.request(:post, '/people', @token, {}, @person.to_xml, { 'Content-Type' => 'application/xml' })
     #
     def request(http_method, path, token = nil, request_options = {}, *arguments)
+      p "xxx oauth-ruby request 1"
       if path !~ /^\//
         @http = create_http(path)
         _uri = URI.parse(path)
         path = "#{_uri.path}#{_uri.query ? "?#{_uri.query}" : ""}"
       end
+      p "xxx oauth-ruby request 2"
 
       # override the request with your own, this is useful for file uploads which Net::HTTP does not do
       req = create_signed_request(http_method, path, token, request_options, *arguments)
+      p "xxx oauth-ruby request 3"
       return nil if block_given? && (yield(req) == :done)
+      p "xxx oauth-ruby request 4"
       rsp = http.request(req)
+      p "xxx oauth-ruby request 5"
       # check for an error reported by the Problem Reporting extension
       # (https://wiki.oauth.net/ProblemReporting)
       # note: a 200 may actually be an error; check for an oauth_problem key to be sure
       if !(headers = rsp.to_hash["www-authenticate"]).nil? &&
          (h = headers.select { |hdr| hdr =~ /^OAuth / }).any? &&
          h.first =~ /oauth_problem/
+        p "xxx oauth-ruby request 6"
 
         # puts "Header: #{h.first}"
 
@@ -213,6 +219,7 @@ module OAuth
 
         raise OAuth::Problem.new(params.delete("oauth_problem"), rsp, params)
       end
+      p "xxx oauth-ruby request 7: #{rsp}"
 
       rsp
     end
