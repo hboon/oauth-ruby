@@ -220,7 +220,8 @@ module OAuth
         raise OAuth::Problem.new(params.delete("oauth_problem"), rsp, params)
       end
       #hhh this is the one that is wrong `rsp`
-      p "xxx oauth-ruby request 7: #{rsp}"
+      p "xxx oauth-ruby request 7 rsp: #{rsp}"
+      p "xxx oauth-ruby request 8 rsp.to_hash: #{rsp.to_hash}"
 
       rsp
     end
