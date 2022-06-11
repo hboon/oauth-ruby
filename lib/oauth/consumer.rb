@@ -151,11 +151,14 @@ module OAuth
     #
     # TODO oauth_callback should be a mandatory parameter
     def get_request_token(request_options = {}, *arguments, &block)
+      p "xxx oauth-ruby get_request_token 1 request_options: #{request_options}"
       # if oauth_callback wasn't provided, it is assumed that oauth_verifiers
       # will be exchanged out of band
       request_options[:oauth_callback] ||= OAuth::OUT_OF_BAND unless request_options[:exclude_callback]
+      p "xxx oauth-ruby get_request_token 2 request_options[:oauth_callback]: #{request_options[:oauth_callback]}"
 
       response = if block_given?
+                   p "xxx oauth-ruby get_request_token 3"
                    token_request(
                      http_method,
                      (request_token_url? ? request_token_url : request_token_path),
@@ -165,6 +168,7 @@ module OAuth
                      &block
                    )
                  else
+                   p "xxx oauth-ruby get_request_token 4"
                    token_request(http_method, (request_token_url? ? request_token_url : request_token_path), nil, request_options, *arguments)
                  end
       OAuth::RequestToken.from_hash(self, response)
@@ -223,8 +227,11 @@ module OAuth
 
     # Creates a request and parses the result as url_encoded. This is used internally for the RequestToken and AccessToken requests.
     def token_request(http_method, path, token = nil, request_options = {}, *arguments)
+      p "xxx oauth-ruby token_request 1"
       request_options[:token_request] ||= true
+      p "xxx oauth-ruby token_request 2 request_options[:token_request]: #{request_options[:token_request]}"
       response = request(http_method, path, token, request_options, *arguments)
+      p "xxx oauth-ruby token_request 3 response.code: #{response.code.to_i}"
       case response.code.to_i
 
       when (200..299)
@@ -254,6 +261,7 @@ module OAuth
 
         token_request(http_method, uri.path, token, request_options, arguments)
       when (400..499)
+        p "xxx oauth-ruby token_request 5 400..499 response: #{response} error: #{response.error!} body: #{response.body}"
         raise OAuth::Unauthorized, response
       else
         response.error!
