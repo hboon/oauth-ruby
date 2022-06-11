@@ -403,6 +403,7 @@ module OAuth
 
     # create the http request object for a given http_method and path
     def create_http_request(http_method, path, *arguments)
+      p "xxx oauth-ruby create_http_request 1 path: #{path} arguments.size: #{arguments.size}"
       http_method = http_method.to_sym
 
       data = arguments.shift if %i[post put patch].include?(http_method)
@@ -437,6 +438,7 @@ module OAuth
 
       if data.is_a?(Hash)
         request.body = OAuth::Helper.normalize(data)
+        p "xxx oauth-ruby create_http_request 2 body: #{request.body}"
         request.content_type = "application/x-www-form-urlencoded"
       elsif data
         if data.respond_to?(:read)

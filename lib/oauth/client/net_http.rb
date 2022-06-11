@@ -89,6 +89,7 @@ class Net::HTTPGenericRequest
   end
 
   def set_oauth_header
+    p "xxx oauth-ruby set_oauth_header: #{@oauth_helper.header}"
     self["Authorization"] = @oauth_helper.header
   end
 
